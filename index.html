@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adrian Maier | Developer Portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent-primary: #58a6ff;
+            --accent-secondary: #388bfd;
+            --terminal-green: #3fb950;
+            --terminal-header: #30363d;
+            --terminal-text: #e6edf3;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg-secondary);
+            padding: 1rem 0;
+            z-index: 100;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--terminal-text);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-primary);
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--text-secondary);
+            font-size: 1.25rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: var(--accent-primary);
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-top: 4rem;
+        }
+        
+        .terminal {
+            background-color: #0d1117;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            margin-top: 2rem;
+        }
+        
+        .terminal-header {
+            background-color: var(--terminal-header);
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .terminal-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .terminal-button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .terminal-button.red {
+            background-color: #ff5f56;
+        }
+        
+        .terminal-button.yellow {
+            background-color: #ffbd2e;
+        }
+        
+        .terminal-button.green {
+            background-color: #27c93f;
+        }
+        
+        .terminal-title {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-left: 1rem;
+        }
+        
+        .terminal-body {
+            padding: 1rem;
+            font-family: 'Fira Code', monospace;
+            color: var(--terminal-text);
+            min-height: 300px;
+            position: relative;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        
+        .prompt {
+            display: flex;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .prompt-sign {
+            color: var(--terminal-green);
+            margin-right: 0.5rem;
+        }
+        
+        .terminal-input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 18px;
+            background-color: var(--terminal-green);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 1px;
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        .section {
+            padding: 6rem 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card {
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .project-content {
+            padding: 1.5rem;
+        }
+        
+        .project-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        
+        .project-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-tag {
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-primary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .project-link {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .featured-project {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .featured-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .featured-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .featured-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .skills-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .skills-card {
+            flex: 0 1 220px;
+            min-width: 220px;
+            margin-bottom: 1rem;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .skills-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .skills-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skills-list {
+            list-style: none;
+        }
+        
+        .skills-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .skill-icon {
+            color: var(--accent-primary);
+        }
+        
+        .skill-progress {
+            height: 6px;
+            background-color: var(--bg-primary);
+            border-radius: 3px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .skill-progress-bar {
+            height: 100%;
+            background-color: var(--accent-primary);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+        
+        .contribution-chart {
+            width: 100%;
+            height: 200px;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            margin-top: 2rem;
+            display: grid;
+            grid-template-columns: repeat(52, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 3px;
+            padding: 1rem;
+        }
+        
+        .day {
+            border-radius: 2px;
+            transition: transform 0.2s ease;
+        }
+        
+        .day:hover {
+            transform: scale(1.2);
+        }
+        
+        .level-0 {
+            background-color: #161b22;
+        }
+        
+        .level-1 {
+            background-color: #0e4429;
+        }
+        
+        .level-2 {
+            background-color: #006d32;
+        }
+        
+        .level-3 {
+            background-color: #26a641;
+        }
+        
+        .level-4 {
+            background-color: #39d353;
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-primary);
+            border: 1px solid #30363d;
+            border-radius: 4px;
+            color: var(--text-primary);
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--accent-primary);
+        }
+        
+        .form-textarea {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--accent-primary);
+            color: #fff;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-secondary);
+        }
+        
+        footer {
+            background-color: var(--bg-secondary);
+            padding: 2rem 0;
+            text-align: center;
+            margin-top: 4rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--accent-primary);
+        }
+        
+        .footer-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+        
+        /* Interactive Terminal Animation */
+        #terminal-output {
+            min-height: 100px;
+            line-height: 1.6;
+        }
+        
+        .command {
+            color: #58a6ff;
+            font-weight: 600;
+        }
+        
+        /* For code presentation */
+        .code-block {
+            background-color: #0d1117;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: 'Fira Code', monospace;
+            color: var(--terminal-text);
+        }
+        
+        .token.comment {
+            color: #8b949e;
+        }
+        
+        .token.keyword {
+            color: #ff7b72;
+        }
+        
+        .token.string {
+            color: #a5d6ff;
+        }
+        
+        .token.function {
+            color: #d2a8ff;
+        }
+        
+        .token.number {
+            color: #79c0ff;
+        }
+        
+        /* Project hover effect */
+        .project-image-container {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(13, 17, 23, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-card:hover .project-overlay {
+            opacity: 1;
+        }
+
+        .view-project-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--accent-primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+
+        .view-project-btn:hover {
+            background-color: var(--accent-secondary);
+        }
+
+        /* 3D Animation for Logo */
+        .logo {
+            position: relative;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .logo:hover {
+            animation: logo-rotate 2s ease-in-out;
+        }
+
+        @keyframes logo-rotate {
+            0% { transform: rotateY(0); }
+            50% { transform: rotateY(180deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #30363d;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+
+        /* Interactive Particle Background */
+        #particles-js {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .featured-project {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .social-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .terminal {
+                max-width: 100%;
+                margin: 0;
+            }
+            
+            .hero {
+                height: auto;
+                padding-top: 6rem;
+                padding-bottom: 3rem;
+            }
+            
+            .contact-form {
+                padding: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .section-title {
+                font-size: 1.75rem;
+            }
+            
+            .featured-title {
+                font-size: 1.5rem;
+            }
+            
+            .terminal-body {
+                padding: 0.75rem;
+            }
+            
+            .skills-card {
+                padding: 1rem;
+            }
+            
+            .footer-links {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+        
+        /* Download Resume Button */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background-color: rgba(88, 166, 255, 0.1);
+            color: var(--accent-primary);
+            font-weight: 500;
+            border: 1px solid var(--accent-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .download-btn:hover {
+            background-color: rgba(88, 166, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        
+        .download-btn svg {
+            transition: transform 0.3s ease;
+        }
+        
+        .download-btn:hover svg {
+            transform: translateY(2px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background (will be initialized via JS) -->
+    <div id="particles-js"></div>
+
+    <!-- Header & Navigation -->
+    <header>
+        <nav class="container">
+            <div class="logo">AM@dev:~$</div>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="social-links">
+                <a href="https://github.com/AdiDev29" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                    </svg>
+                </a>
+                <a href="https://linkedin.com/" target="_blank">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="terminal">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button red"></div>
+                        <div class="terminal-button yellow"></div>
+                        <div class="terminal-button green"></div>
+                    </div>
+                    <div class="terminal-title">adrianmaier@MacBook-Pro ~ %</div>
+                </div>
+                <div class="terminal-body" id="terminal-body" onclick="focusTerminalInput()">
+                    <div id="terminal-output"></div>
+                    <div class="prompt">
+                        <span class="prompt-sign">$</span>
+                        <span id="current-command"></span>
+                        <span class="cursor"></span>
+                    </div>
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="featured-project">
+                <div class="featured-content">
+                    <h3 class="featured-title">Hi, I'm Adrian Maier</h3>
+                    <p class="featured-description">
+                        I've been immersed in technology from a young age, growing up in a household where both my parents work in software. This exposure sparked my passion for programming and innovation, driving me to explore fields like machine learning, data structures, algorithms, and cybersecurity.
+                    </p>
+                    <p class="featured-description">
+                        As a high school IB student and leader in organizations like Robotics, DECA, and IB Council, I've honed my technical skills and teamwork abilities. I scored 53 on the senior Canadian Computing Competition (CCC) in 2025, demonstrating my programming proficiency.
+                    </p>
+                    <p class="featured-description">
+                        I'm especially proud of co-founding Echo Vision, a startup leveraging AI to create solutions for the visually impaired. I'm passionate about using technology to solve meaningful problems and push the boundaries of what's possible.
+                    </p>
+                    <div class="project-tags">
+                        <span class="project-tag">AI Innovation</span>
+                        <span class="project-tag">Problem Solver</span>
+                        <span class="project-tag">Tech Enthusiast</span>
+                        <span class="project-tag">Competitive Programmer</span>
+                    </div>
+                    <div style="margin-top: 1.5rem;">
+                        <a href="resume.pdf" download="Adrian_Maier_Resume.pdf" class="download-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                            Download Resume
+                        </a>
+                    </div>
+                </div>
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                        </div>
+                        <div class="terminal-title">adrianmaier@MacBook-Pro ~ %</div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="prompt">
+                            <span class="prompt-sign">$</span>
+                            <span>cat about_adrian.json</span>
+                        </div>
+                        <pre><code>{
+  "name": "Adrian Maier",
+  "role": "CTO at Echo Vision",
+  "education": {
+    "school": "Cardinal Carter CHS (IB Program)",
+    "location": "Aurora, Ontario",
+    "expectedGraduation": 2027
+  },
+  "interests": [
+    "Artificial Intelligence",
+    "Machine Learning",
+    "Data Structures",
+    "Algorithms",
+    "Cybersecurity"
+  ],
+  "leadership": [
+    "Vice President of Robotics Club",
+    "DECA Leader",
+    "IB Council Leader"
+  ],
+  "achievements": [
+    "CCC Senior 2025: Score 53",
+    "Medal in Waterloo Math Contest",
+    "3000+ GitHub contributions in 2024"
+  ]
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">My Projects</h2>
+            
+            <!-- Featured Project: Echo Vision -->
+            <div class="featured-project">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-buttons">
+                            <div class="terminal-button red"></div>
+                            <div class="terminal-button yellow"></div>
+                            <div class="terminal-button green"></div>
+                        </div>
+                        <div class="terminal-title">adrianmaier@MacBook-Pro ~ %</div>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="prompt">
+                            <span class="prompt-sign">$</span>
+                            <span>python -c "import echovision; echovision.start_agent()"</span>
+                        </div>
+                        <pre><code class="language-python"># Echo Vision AI Agent Initializing...
+# Loading computer vision modules...
+# Connecting to user device...
+# Starting voice interface...
+# 
+# Echo Vision AI Agent ready to assist
+# ----------------------------------
+# 
+# Agent: "I'm ready to help describe your surroundings.
+#         Just point your camera at what you'd like to know about."
+# 
+# [Agent actively processing visual information from camera]
+# [Agent providing real-time audio feedback]
+# 
+# Status: Running on device
+# Battery impact: Minimal
+# Privacy: All processing done locally</code></pre>
+                    </div>
+                </div>
+                
+                <div class="featured-content">
+                    <h3 class="featured-title">Echo Vision</h3>
+                    <p class="featured-description">
+                        As a co-founder and CTO, I've led the development of an AI-driven software system designed to assist individuals who are visually impaired. Our platform leverages advanced computer vision and natural language processing to create an agentic AI system that interacts with personal devices.
+                    </p>
+                    <p class="featured-description">
+                        I assembled a team of passionate young developers and researchers who collaborate to build innovative solutions that make a meaningful impact on users' lives.
+                    </p>
+                    <div class="project-tags">
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Deep Learning</span>
+                        <span class="project-tag">Computer Vision</span>
+                        <span class="project-tag">Accessibility Tech</span>
+                    </div>
+                    <div class="project-links">
+                        <a href="https://echovision.world/" target="_blank" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                            Visit Website
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Other Projects Note -->
+            <div class="project-card" style="grid-column: 1/-1; max-width: 600px; margin: 5rem auto 0 auto;">
+                <div class="project-content" style="text-align: center;">
+                    <h3 class="project-title">More Projects on GitHub</h3>
+                    <p class="project-description">
+                        I'm constantly working on new projects ranging from algorithm implementations to machine learning models and web applications. Check out my GitHub to see my latest work.
+                    </p>
+                    <div class="project-tags">
+                        <span class="project-tag">3000+ Contributions</span>
+                        <span class="project-tag">Open Source</span>
+                        <span class="project-tag">Diverse Technologies</span>
+                    </div>
+                    <div class="project-links" style="justify-content: center; margin-top: 1.5rem;">
+                        <a href="https://github.com/AdiDev29" class="project-link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                            </svg>
+                            Visit My GitHub
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title">Skills & Expertise</h2>
+            
+            <div class="skills-grid">
+                <!-- Programming Languages -->
+                <div class="skills-card">
+                    <h3 class="skills-card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 3L4 7l4 4"></path>
+                            <path d="M16 3l4 4-4 4"></path>
+                            <path d="M9 17l3-10 3 10"></path>
+                        </svg>
+                        Programming Languages
+                    </h3>
+                    <ul class="skills-list">
+                        <li>
+                            <span>Java (Competitive Programming)</span>
+                            <div class="skill-progress" data-width="95%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Python (Deep Learning)</span>
+                            <div class="skill-progress" data-width="90%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>JavaScript (Web Development)</span>
+                            <div class="skill-progress" data-width="85%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Swift (iOS Development)</span>
+                            <div class="skill-progress" data-width="80%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>C++ (Learning for Competitive Programming)</span>
+                            <div class="skill-progress" data-width="65%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Development Tools -->
+                <div class="skills-card">
+                    <h3 class="skills-card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                        </svg>
+                        Development Tools
+                    </h3>
+                    <ul class="skills-list">
+                        <li>
+                            <span>IntelliJ IDEA</span>
+                            <div class="skill-progress" data-width="90%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>PyCharm</span>
+                            <div class="skill-progress" data-width="90%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Git (3000+ contributions in 2024)</span>
+                            <div class="skill-progress" data-width="95%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>VS Code</span>
+                            <div class="skill-progress" data-width="85%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Technical Skills -->
+                <div class="skills-card">
+                    <h3 class="skills-card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                        Technical Skills
+                    </h3>
+                    <ul class="skills-list">
+                        <li>
+                            <span>Machine Learning & AI</span>
+                            <div class="skill-progress" data-width="85%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Data Structures & Algorithms</span>
+                            <div class="skill-progress" data-width="90%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Cybersecurity</span>
+                            <div class="skill-progress" data-width="80%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Blockchain Development</span>
+                            <div class="skill-progress" data-width="75%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Soft Skills -->
+                <div class="skills-card">
+                    <h3 class="skills-card-title">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        Soft Skills
+                    </h3>
+                    <ul class="skills-list">
+                        <li>
+                            <span>Leadership</span>
+                            <div class="skill-progress" data-width="90%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Teamwork</span>
+                            <div class="skill-progress" data-width="95%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Problem Solving</span>
+                            <div class="skill-progress" data-width="95%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                        <li>
+                            <span>Communication</span>
+                            <div class="skill-progress" data-width="85%">
+                                <div class="skill-progress-bar" style="width: 0%"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- GitHub Contributions -->
+            <div class="terminal" style="margin-top: 3rem;">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button red"></div>
+                        <div class="terminal-button yellow"></div>
+                        <div class="terminal-button green"></div>
+                    </div>
+                    <div class="terminal-title">GitHub Contributions</div>
+                </div>
+                <div class="terminal-body">
+                    <h3 style="margin-bottom: 1rem;">GitHub Activity - 3000+ Contributions in 2024</h3>
+                    <div class="contribution-chart" id="github-contributions">
+                        <!-- Will be filled with JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Get In Touch</h2>
+            
+            <div class="terminal" style="max-width: 600px; margin: 0 auto;">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="terminal-button red"></div>
+                        <div class="terminal-button yellow"></div>
+                        <div class="terminal-button green"></div>
+                    </div>
+                    <div class="terminal-title">Contact Information</div>
+                </div>
+                <div class="terminal-body">
+                    <div style="padding: 1rem;">
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem; color: var(--accent-primary);">Email</h3>
+                            <p style="font-family: 'Fira Code', monospace;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.5rem;">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                    <polyline points="22,6 12,13 2,6"></polyline>
+                                </svg>
+                                <a href="mailto:adrian.maier.nic@icloud.com" style="color: var(--terminal-text); text-decoration: none; border-bottom: 1px dashed var(--text-secondary);">adrian.maier.nic@icloud.com</a>
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem; color: var(--accent-primary);">Phone</h3>
+                            <p style="font-family: 'Fira Code', monospace;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.5rem;">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                                </svg>
+                                <a href="tel:+16476407925" style="color: var(--terminal-text); text-decoration: none; border-bottom: 1px dashed var(--text-secondary);">+1 (647) 640 7925</a>
+                            </p>
+                        </div>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <h3 style="margin-bottom: 0.5rem; color: var(--accent-primary);">Social Media</h3>
+                            <p style="font-family: 'Fira Code', monospace; display: flex; gap: 1.5rem;">
+                                <a href="https://github.com/AdiDev29" style="color: var(--terminal-text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                    </svg>
+                                    GitHub
+                                </a>
+                                <a href="#" style="color: var(--terminal-text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                        <rect x="2" y="9" width="4" height="12"></rect>
+                                        <circle cx="4" cy="4" r="2"></circle>
+                                    </svg>
+                                    LinkedIn
+                                </a>
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem; color: var(--accent-primary);">Location</h3>
+                            <p style="font-family: 'Fira Code', monospace;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 0.5rem;">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                    <circle cx="12" cy="10" r="3"></circle>
+                                </svg>
+                                Aurora, Ontario, Canada
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#projects">Projects</a>
+                <a href="#skills">Skills</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div class="footer-text">
+                <p>&copy; 2025 Adrian Maier. All rights reserved.</p>
+                <p>Email: adrian.maier.nic@icloud.com | Phone: +1 (647) 640 7925</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Terminal functionality
+        const terminalOutput = document.getElementById('terminal-output');
+        const terminalInput = document.getElementById('terminal-input');
+        const currentCommand = document.getElementById('current-command');
+        const terminalBody = document.getElementById('terminal-body');
+        
+        let commandHistory = [];
+        let historyIndex = -1;
+        let terminalInitialized = false;
+        
+        // Terminal files and information
+        const terminalFiles = {
+            'about.txt': `My name is Adrian Maier, and I've been immersed in technology from a young age, growing up in a household where both my parents work in software. This exposure sparked my passion for programming and innovation, driving me to explore fields like machine learning, data structures, algorithms, and cybersecurity.`,
+            'skills.txt': `Programming Languages: Java (Competitive Programming), Python (Deep Learning), JavaScript (Web Development), Swift (iOS Development), C++ (New Addition)
+Tools: IntelliJ IDEA, PyCharm, Git (3000+ contributions in 2024), VS Code
+Soft Skills: Leadership, Teamwork, Problem Solving`,
+            'projects.json': `{
+  "echoVision": {
+    "role": "Chief Technology Officer & Co-founder",
+    "description": "AI-driven software for individuals who are visually impaired",
+    "achievements": [
+      "Put together a developer team of passionate young people",
+      "Developed an agentic AI system that interacts with personal devices",
+      "Research Preview coming soon"
+    ],
+    "url": "https://echovision.world/"
+  },
+  "otherProjects": "Constantly working on new smaller projects, some publicly available on GitHub"
+}`,
+            'education.txt': `Cardinal Carter CHS (IB Program)
+Aurora, Ontario
+Expected Graduation: 2027
+Relevant Coursework: AP Computer Science A`,
+            'achievements.txt': `• Scored 53 on the CCC Senior 2025
+• Winner of a medal in Waterloo Math Contest
+• Completed the DEEP Summer Program at the University of Toronto
+• Over 3000 GitHub contributions in 2024`
+        };
+        
+        const commands = {
+            'help': function() {
+                return `Available commands:<br>
+<span class="command">about</span> - Learn about Adrian Maier<br>
+<span class="command">skills</span> - View Adrian's technical skills<br>
+<span class="command">projects</span> - Explore Adrian's projects<br>
+<span class="command">education</span> - See Adrian's educational background<br>
+<span class="command">achievements</span> - View Adrian's accomplishments<br>
+<span class="command">contact</span> - Get Adrian's contact information<br>
+<span class="command">resume</span> - Download Adrian's resume<br>
+<span class="command">clear</span> - Clear the terminal<br>
+<span class="command">cat [filename]</span> - Display file contents<br>
+<span class="command">ls</span> - List available files<br>
+<span class="command">echo [message]</span> - Print a message<br>
+<span class="command">github</span> - Visit Adrian's GitHub<br>
+<span class="command">linkedin</span> - Visit Adrian's LinkedIn<br>
+<span class="command">echo-vision</span> - Learn about Echo Vision<br>
+<span class="command">whoami</span> - Find out who you are`;
+            },
+            'about': function() {
+                return terminalFiles['about.txt'];
+            },
+            'skills': function() {
+                return terminalFiles['skills.txt'];
+            },
+            'projects': function() {
+                try {
+                    const projects = JSON.parse(terminalFiles['projects.json']);
+                    return `Echo Vision (2024 - Present)<br>
+Role: ${projects.echoVision.role}<br>
+Description: ${projects.echoVision.description}<br>
+Key Achievements:<br>
+- ${projects.echoVision.achievements.join('<br>- ')}<br>
+URL: ${projects.echoVision.url}<br>
+<br>
+Other Projects: ${projects.otherProjects}`;
+                } catch(e) {
+                    return 'Error parsing projects.json: ' + e.message;
+                }
+            },
+            'education': function() {
+                return terminalFiles['education.txt'];
+            },
+            'achievements': function() {
+                return terminalFiles['achievements.txt'];
+            },
+            'contact': function() {
+                return `Email: adrian.maier.nic@icloud.com<br>Phone: +1 (647) 640 7925`;
+            },
+            'resume': function() {
+                const link = document.createElement('a');
+                link.href = 'resume.pdf';
+                link.download = 'Adrian_Maier_Resume.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                return 'Downloading resume...';
+            },
+            'clear': function() {
+                terminalOutput.innerHTML = '';
+                return '';
+            },
+            'cat': function(args) {
+                if (!args[0]) {
+                    return 'Usage: cat [filename]';
+                }
+                
+                const filename = args[0];
+                if (terminalFiles[filename]) {
+                    return terminalFiles[filename];
+                } else {
+                    return `File not found: ${filename}`;
+                }
+            },
+            'ls': function() {
+                return Object.keys(terminalFiles).join('<br>');
+            },
+            'echo': function(args) {
+                return args.join(' ');
+            },
+            'github': function() {
+                window.open('https://github.com/AdiDev29', '_blank');
+                return 'Opening GitHub...';
+            },
+            'linkedin': function() {
+                window.open('https://linkedin.com/', '_blank');
+                return 'Opening LinkedIn...';
+            },
+            'echo-vision': function() {
+                window.open('https://echovision.world/', '_blank');
+                return 'Opening Echo Vision website...';
+            },
+            'whoami': function() {
+                return 'visitor@adrian-portfolio';
+            }
+        };
+        
+        // Initialize the terminal
+        function initTerminal() {
+            if (terminalInitialized) return;
+            
+            const welcomeText = "Welcome to my portfolio! I'm Adrian Maier, a high school student, programmer, and CTO of Echo Vision. I'm passionate about AI, algorithms, and building technology that makes a difference.";
+            
+            // Type effect for welcome message
+            let i = 0;
+            function typeWelcome() {
+                if (i < welcomeText.length) {
+                    terminalOutput.innerHTML += welcomeText.charAt(i);
+                    terminalBody.scrollTop = terminalBody.scrollHeight;
+                    i++;
+                    setTimeout(typeWelcome, 30);
+                } else {
+                    terminalOutput.innerHTML += "<br><br>Type <span style='color: #58a6ff;'>help</span> to see available commands<br><br>";
+                    setTimeout(() => {
+                        terminalBody.scrollTop = terminalBody.scrollHeight;
+                    }, 10);
+                }
+            }
+            
+            setTimeout(typeWelcome, 500);
+            terminalInitialized = true;
+            
+            // Focus the hidden input field
+            terminalInput.focus();
+        }
+        
+        // Execute a command
+        function executeCommand(commandStr) {
+            // Add to history
+            if (commandStr.trim() !== '') {
+                commandHistory.unshift(commandStr);
+                if (commandHistory.length > 50) {
+                    commandHistory.pop();
+                }
+            }
+            historyIndex = -1;
+            
+            // Parse command and arguments
+            const args = commandStr.split(' ');
+            const cmd = args.shift().toLowerCase();
+            
+            // Execute command if it exists
+            let output = '';
+            if (commands[cmd]) {
+                output = commands[cmd](args);
+            } else if (cmd.trim() !== '') {
+                output = `Command not found: ${cmd}. Type 'help' to see available commands.`;
+            }
+            
+            // Display command in terminal
+            const commandElement = document.createElement('div');
+            commandElement.innerHTML = `<span class="prompt-sign">$</span> ${commandStr}`;
+            terminalOutput.appendChild(commandElement);
+            
+            // Display output
+            if (output !== '') {
+                const outputElement = document.createElement('div');
+                outputElement.innerHTML = output;
+                outputElement.style.marginBottom = '10px';
+                terminalOutput.appendChild(outputElement);
+            }
+            
+            // Add a small delay before scrolling to ensure HTML has been updated
+            setTimeout(() => {
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+            }, 10);
+            
+            // Clear current command
+            currentCommand.textContent = '';
+            terminalInput.value = '';
+        }
+        
+        // Focus the terminal input
+        function focusTerminalInput() {
+            terminalInput.focus();
+        }
+        
+        // Event listener for the terminal input
+        terminalInput.addEventListener('input', function() {
+            currentCommand.textContent = this.value;
+        });
+        
+        terminalInput.addEventListener('keydown', function(e) {
+            // Handle Up/Down arrows for command history
+            if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (historyIndex < commandHistory.length - 1) {
+                    historyIndex++;
+                    this.value = commandHistory[historyIndex];
+                    currentCommand.textContent = this.value;
+                }
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    this.value = commandHistory[historyIndex];
+                    currentCommand.textContent = this.value;
+                } else if (historyIndex === 0) {
+                    historyIndex = -1;
+                    this.value = '';
+                    currentCommand.textContent = '';
+                }
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                executeCommand(this.value);
+            } else if (e.key === 'Tab') {
+                e.preventDefault();
+                // Implement tab completion here
+            }
+        });
+        
+        // Focus terminal on page load
+        window.addEventListener('load', () => {
+            initTerminal();
+            focusTerminalInput();
+            
+            // Initialize GitHub contribution chart
+            const contributionChart = document.getElementById('github-contributions');
+            for (let i = 0; i < 364; i++) {
+                const day = document.createElement('div');
+                day.classList.add('day');
+                
+                // Create a more realistic contribution pattern
+                let level;
+                if (i % 7 === 0 || i % 7 === 6) {
+                    // Weekends tend to have more contributions
+                    level = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+                } else {
+                    // Weekdays have variable contributions
+                    const rand = Math.random();
+                    if (rand < 0.1) level = 0; // 10% chance of no contributions
+                    else if (rand < 0.3) level = 1; // 20% chance of light contributions
+                    else if (rand < 0.6) level = 2; // 30% chance of medium contributions
+                    else if (rand < 0.9) level = 3; // 30% chance of heavy contributions
+                    else level = 4; // 10% chance of maximum contributions
+                }
+                
+                day.classList.add(`level-${level}`);
+                
+                // Add tooltip data
+                const count = level === 0 ? 0 : (level * Math.floor(Math.random() * 5) + 1);
+                day.setAttribute('data-count', count);
+                
+                // Generate a reasonable date
+                const month = Math.floor(i / 30) % 12 + 1;
+                const dayOfMonth = (i % 30) + 1;
+                const formattedMonth = month < 10 ? `0${month}` : month;
+                const formattedDay = dayOfMonth < 10 ? `0${dayOfMonth}` : dayOfMonth;
+                day.setAttribute('data-date', `2024-${formattedMonth}-${formattedDay}`);
+                
+                day.addEventListener('mouseover', function() {
+                    const count = this.getAttribute('data-count');
+                    const date = this.getAttribute('data-date');
+                    this.setAttribute('title', `${count} contributions on ${date}`);
+                });
+                
+                contributionChart.appendChild(day);
+            }
+            
+            // Initialize particle background
+            particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 50, // Reduced for better performance
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#58a6ff'
+                    },
+                    shape: {
+                        type: 'circle',
+                        stroke: {
+                            width: 0,
+                            color: '#000000'
+                        }
+                    },
+                    opacity: {
+                        value: 0.3, // Reduced opacity for subtlety
+                        random: true,
+                        anim: {
+                            enable: true,
+                            speed: 0.5, // Slower animation
+                            opacity_min: 0.1,
+                            sync: false
+                        }
+                    },
+                    size: {
+                        value: 2, // Smaller particles
+                        random: true,
+                        anim: {
+                            enable: false
+                        }
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#58a6ff',
+                        opacity: 0.2, // More subtle lines
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 1, // Slower movement
+                        direction: 'none',
+                        random: true,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false,
+                        attract: {
+                            enable: false
+                        }
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'grab'
+                        },
+                        onclick: {
+                            enable: true,
+                            mode: 'push'
+                        },
+                        resize: true
+                    },
+                    modes: {
+                        grab: {
+                            distance: 140,
+                            line_linked: {
+                                opacity: 0.8 // More visible on interaction
+                            }
+                        },
+                        push: {
+                            particles_nb: 3 // Add fewer particles on click
+                        }
+                    }
+                },
+                retina_detect: true
+            });
+        });
+        
+        // Keep terminal focused
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.terminal-body')) {
+                focusTerminalInput();
+            }
+        });
+        
+        // Globally accessible function
+        window.focusTerminalInput = focusTerminalInput;
+        
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Skill progress animation on scroll
+        const skillElements = document.querySelectorAll('.skill-progress-bar');
+        
+        function checkScroll() {
+            skillElements.forEach(skill => {
+                const slideInAt = (window.scrollY + window.innerHeight) - skill.offsetHeight;
+                const skillBottom = skill.offsetTop + skill.offsetHeight;
+                const isHalfShown = slideInAt > skill.offsetTop;
+                const isNotScrolledPast = window.scrollY < skillBottom;
+                
+                if (isHalfShown && isNotScrolledPast) {
+                    skill.style.width = skill.parentElement.getAttribute('data-width') || skill.style.width;
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', checkScroll);
+        window.addEventListener('load', checkScroll);
+        
+        // Project card hover effects
+        document.querySelectorAll('.view-project-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                alert('Project details would open here. This is a demonstration of interactivity.');
+            });
+        });
+    </script>
+</body>
+</html>
