@@ -26,6 +26,103 @@
       overflow: hidden;
     }
 
+    /* MOBILE BLOCK */
+    #mobile {
+      display: none;
+      position: fixed; inset: 0;
+      background: #000;
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 32px;
+    }
+
+    #mobile.show { display: flex; }
+
+    .mobile-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      max-width: 320px;
+      width: 100%;
+    }
+
+    .mobile-sprite {
+      display: grid;
+      grid-template-columns: repeat(8, 8px);
+      grid-template-rows: repeat(8, 8px);
+      gap: 1px;
+      margin-bottom: 8px;
+    }
+
+    .mobile-sprite span { width: 8px; height: 8px; background: #fff; }
+    .mobile-sprite span.off { background: transparent; }
+
+    .mobile-title {
+      font-size: 20px;
+      letter-spacing: 0.1em;
+      text-align: center;
+      animation: glitch 4s infinite;
+    }
+
+    @keyframes glitch {
+      0%, 90%, 100% { text-shadow: none; transform: none; }
+      91% { text-shadow: -2px 0 #fff; transform: translateX(2px); }
+      92% { text-shadow: 2px 0 #888; transform: translateX(-2px); }
+      93% { text-shadow: none; transform: none; }
+    }
+
+    .mobile-sub {
+      font-size: 8px;
+      color: #555;
+      letter-spacing: 0.15em;
+      text-align: center;
+    }
+
+    .mobile-msg {
+      font-size: 9px;
+      line-height: 2.2;
+      text-align: center;
+      color: #ccc;
+      margin-top: 8px;
+      border: 2px solid #fff;
+      padding: 24px 20px;
+      position: relative;
+    }
+
+    .mobile-msg::before {
+      content: '';
+      position: absolute;
+      top: -5px; left: -5px;
+      width: 8px; height: 8px;
+      background: #000;
+      border: 2px solid #fff;
+    }
+
+    .mobile-msg::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; right: -5px;
+      width: 8px; height: 8px;
+      background: #000;
+      border: 2px solid #fff;
+    }
+
+    .mobile-blink {
+      color: #fff;
+      animation: blink 1s step-end infinite;
+    }
+
+    .mobile-footer {
+      font-size: 7px;
+      color: #444;
+      text-align: center;
+      letter-spacing: 0.1em;
+      margin-top: 8px;
+    }
+
     /* CRT overlay */
     body::before {
       content: '';
@@ -279,6 +376,26 @@
 </head>
 <body>
 
+<!-- MOBILE BLOCK -->
+<div id="mobile">
+  <div class="mobile-inner">
+    <div class="mobile-sprite" id="mobileSprite"></div>
+    <div class="mobile-title">WRONG DEVICE</div>
+    <div class="mobile-sub">ERROR CODE: 0x00MOBILE</div>
+    <div class="mobile-msg">
+      bro.<br/><br/>
+      you're on a phone.<br/><br/>
+      this website was forged<br/>
+      in the fires of a laptop.<br/><br/>
+      it will not run here.<br/>
+      it will not be tamed here.<br/><br/>
+      <span class="mobile-blink">please go get your laptop.</span><br/><br/>
+      we'll wait.
+    </div>
+    <div class="mobile-footer">// ADISOFT 1992 — we believed in you //</div>
+  </div>
+</div>
+
 <!-- BOOT -->
 <div id="boot">
   <div class="boot-line" id="b0">ADISOFT BIOS v1.992</div>
@@ -341,6 +458,30 @@
 <div class="pixel-deco" id="deco"></div>
 
 <script>
+  // MOBILE DETECTION
+  const mobileScreen = document.getElementById('mobile');
+  const mobileSprite = document.getElementById('mobileSprite');
+
+  // sad little phone sprite
+  const phonePattern = [
+    [0,1,1,1,1,1,1,0],
+    [1,1,1,1,1,1,1,1],
+    [1,1,0,0,0,0,1,1],
+    [1,1,0,0,0,0,1,1],
+    [1,1,0,0,0,0,1,1],
+    [1,1,0,0,0,0,1,1],
+    [1,1,1,0,0,1,1,1],
+    [0,1,1,1,1,1,1,0],
+  ];
+  phonePattern.forEach(row => row.forEach(cell => {
+    const s = document.createElement('span');
+    if (!cell) s.classList.add('off');
+    mobileSprite.appendChild(s);
+  }));
+
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+  if (isMobile) mobileScreen.classList.add('show');
+
   // little pixel character decoration
   const pattern = [
     [0,0,1,1,1,1,0,0],
