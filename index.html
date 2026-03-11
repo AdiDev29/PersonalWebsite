@@ -1,1003 +1,418 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Adrian Maier</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0c0c0c;
-            --bg-elevated: #111;
-            --surface: #161616;
-            --border: #252525;
-            --text: #e8e8e8;
-            --text-secondary: #777;
-            --accent: #c9a66b;
-            --accent-dim: rgba(201, 166, 107, 0.12);
-            --green: #6b9b6b;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'EB Garamond', Georgia, serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        ::selection {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-
-        .grain {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-        }
-
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            padding: 1.5rem 3rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: all 0.3s ease;
-        }
-
-        nav.scrolled {
-            background: rgba(12, 12, 12, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .nav-name {
-            font-family: 'Syne', sans-serif;
-            font-size: 0.85rem;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            color: var(--text);
-            text-decoration: none;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .nav-links a:hover { color: var(--accent); }
-
-        .music-btn {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 100;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .music-btn:hover { border-color: var(--accent); }
-        .music-btn.active { border-color: var(--accent); background: var(--accent-dim); }
-
-        .music-bars {
-            display: flex;
-            gap: 2px;
-            align-items: flex-end;
-            height: 14px;
-        }
-
-        .music-bar {
-            width: 2px;
-            background: var(--text-secondary);
-            border-radius: 1px;
-            transition: background 0.3s ease;
-        }
-
-        .music-btn.active .music-bar {
-            background: var(--accent);
-            animation: pulse 0.7s ease-in-out infinite;
-        }
-
-        .music-bar:nth-child(1) { height: 5px; animation-delay: 0s; }
-        .music-bar:nth-child(2) { height: 10px; animation-delay: 0.1s; }
-        .music-bar:nth-child(3) { height: 7px; animation-delay: 0.2s; }
-        .music-bar:nth-child(4) { height: 12px; animation-delay: 0.15s; }
-        .music-bar:nth-child(5) { height: 8px; animation-delay: 0.05s; }
-
-        @keyframes pulse {
-            0%, 100% { transform: scaleY(0.6); }
-            50% { transform: scaleY(1); }
-        }
-
-        .music-btn:not(.active) .music-bar { animation: none; }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 3rem;
-            position: relative;
-        }
-
-        .hero-content { max-width: 850px; }
-
-        .hero-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.1em;
-            color: var(--accent);
-            margin-bottom: 1.25rem;
-            opacity: 0;
-            animation: fadeUp 0.7s ease forwards 0.2s;
-        }
-
-        .hero-name {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(2.8rem, 9vw, 6.5rem);
-            font-weight: 700;
-            line-height: 1;
-            letter-spacing: -0.03em;
-            margin-bottom: 1.75rem;
-            opacity: 0;
-            animation: fadeUp 0.7s ease forwards 0.35s;
-        }
-
-        .hero-desc {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            max-width: 550px;
-            margin-bottom: 2.5rem;
-            opacity: 0;
-            animation: fadeUp 0.7s ease forwards 0.5s;
-        }
-
-        .hero-meta {
-            display: flex;
-            gap: 2.5rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            opacity: 0;
-            animation: fadeUp 0.7s ease forwards 0.65s;
-        }
-
-        .hero-meta span {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--green);
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .scroll-cue {
-            position: absolute;
-            bottom: 2.5rem;
-            left: 3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--text-secondary);
-            letter-spacing: 0.1em;
-            opacity: 0;
-            animation: fadeUp 0.7s ease forwards 0.8s;
-        }
-
-        .scroll-line {
-            width: 35px;
-            height: 1px;
-            background: var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .scroll-line::after {
-            content: '';
-            position: absolute;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: var(--accent);
-            animation: scrollMove 2s ease-in-out infinite;
-        }
-
-        @keyframes scrollMove {
-            0% { left: -100%; }
-            100% { left: 100%; }
-        }
-
-        section {
-            padding: 7rem 3rem;
-            position: relative;
-        }
-
-        .section-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            letter-spacing: 0.15em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 2.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .section-label::after {
-            content: '';
-            flex: 1;
-            max-width: 150px;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 5rem;
-            max-width: 1100px;
-        }
-
-        .about-text {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--text-secondary);
-        }
-
-        .about-text p { margin-bottom: 1.25rem; }
-        .about-text strong { color: var(--text); font-weight: 500; }
-
-        .about-details {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .detail-block {
-            padding: 1.25rem 1.5rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            transition: border-color 0.3s ease;
-        }
-
-        .detail-block:hover { border-color: var(--accent); }
-
-        .detail-label {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.55rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            margin-bottom: 0.5rem;
-        }
-
-        .detail-value {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 500;
-        }
-
-        .detail-sub {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-top: 0.2rem;
-        }
-
-        .bento {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1rem;
-            max-width: 1300px;
-        }
-
-        .bento-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            padding: 1.75rem;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.35s ease;
-            opacity: 0;
-            transform: translateY(15px);
-        }
-
-        .bento-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .bento-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-        }
-
-        .bento-card.lg { grid-column: span 6; grid-row: span 2; }
-        .bento-card.md { grid-column: span 6; }
-        .bento-card.sm { grid-column: span 4; }
-
-        .bento-icon {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            opacity: 0.8;
-        }
-
-        .bento-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.15rem;
-            font-weight: 600;
-            margin-bottom: 0.4rem;
-        }
-
-        .bento-desc {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-            flex-grow: 1;
-        }
-
-        .bento-tag {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.6rem;
-            color: var(--accent);
-            margin-top: 1rem;
-            letter-spacing: 0.04em;
-        }
-
-        .timeline {
-            max-width: 750px;
-        }
-
-        .tl-item {
-            display: grid;
-            grid-template-columns: 90px 1fr;
-            gap: 1.5rem;
-            padding-bottom: 2.5rem;
-            position: relative;
-            opacity: 0;
-            transform: translateX(-15px);
-            transition: all 0.5s ease;
-        }
-
-        .tl-item.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .tl-item::before {
-            content: '';
-            position: absolute;
-            left: 90px;
-            top: 6px;
-            bottom: -6px;
-            width: 1px;
-            background: var(--border);
-        }
-
-        .tl-item:last-child::before { display: none; }
-
-        .tl-year {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--accent);
-            letter-spacing: 0.04em;
-            padding-top: 3px;
-        }
-
-        .tl-content {
-            padding-left: 1.75rem;
-            position: relative;
-        }
-
-        .tl-content::before {
-            content: '';
-            position: absolute;
-            left: -3px;
-            top: 5px;
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: var(--bg);
-            border: 2px solid var(--accent);
-        }
-
-        .tl-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 0.35rem;
-        }
-
-        .tl-desc {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .quote-section {
-            background: var(--bg-elevated);
-            border-top: 1px solid var(--border);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .quote-inner {
-            max-width: 750px;
-            text-align: center;
-            margin: 0 auto;
-        }
-
-        .quote-text {
-            font-size: clamp(1.35rem, 2.5vw, 1.75rem);
-            font-style: italic;
-            line-height: 1.7;
-            margin-bottom: 1.75rem;
-        }
-
-        .quote-attr {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            color: var(--accent);
-            letter-spacing: 0.08em;
-        }
-
-        .contact-inner { max-width: 550px; }
-
-        .contact-title {
-            font-family: 'Syne', sans-serif;
-            font-size: clamp(1.8rem, 4vw, 2.5rem);
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-        }
-
-        .contact-text {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .btns {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            padding: 0.9rem 1.75rem;
-            border-radius: 5px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-            border: none;
-        }
-
-        .btn-primary:hover {
-            filter: brightness(1.1);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        footer {
-            padding: 2.5rem 3rem;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.65rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .footer-links a:hover { color: var(--accent); }
-
-        .cursor-glow {
-            position: fixed;
-            width: 350px;
-            height: 350px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--accent-dim) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            transform: translate(-50%, -50%);
-        }
-
-        #bgCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            opacity: 0.35;
-        }
-
-        @media (max-width: 900px) {
-            nav { padding: 1.25rem 1.5rem; }
-            .nav-links { display: none; }
-            section { padding: 5rem 1.5rem; }
-            .hero { padding: 0 1.5rem; }
-            .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-            .bento { grid-template-columns: 1fr; }
-            .bento-card.lg, .bento-card.md, .bento-card.sm { grid-column: span 1; grid-row: span 1; }
-            .tl-item { grid-template-columns: 1fr; gap: 0.4rem; }
-            .tl-item::before { display: none; }
-            .tl-content { padding-left: 0; }
-            .tl-content::before { display: none; }
-            footer { flex-direction: column; gap: 1rem; text-align: center; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ADISOFT</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #000;
+      --fg: #fff;
+      --dim: #888;
+      --accent: #fff;
+      --blink: #fff;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Press Start 2P', monospace;
+      image-rendering: pixelated;
+      overflow: hidden;
+    }
+
+    /* CRT overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    /* screen flicker */
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: rgba(255,255,255,0.015);
+      pointer-events: none;
+      z-index: 998;
+      animation: flicker 8s infinite;
+    }
+
+    @keyframes flicker {
+      0%, 95%, 100% { opacity: 1; }
+      96% { opacity: 0.85; }
+      97% { opacity: 1; }
+      98% { opacity: 0.9; }
+      99% { opacity: 1; }
+    }
+
+    /* BOOT SCREEN */
+    #boot {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      justify-content: flex-start;
+      padding: 40px;
+      background: #000;
+      z-index: 100;
+      font-size: 10px;
+      line-height: 2;
+      color: #fff;
+      transition: opacity 0.4s;
+    }
+
+    #boot .boot-line {
+      opacity: 0;
+      white-space: nowrap;
+    }
+
+    #boot .boot-line.show {
+      animation: fadeIn 0.05s forwards;
+    }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* STUDIO SPLASH */
+    #splash {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #000;
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+
+    #splash.visible { opacity: 1; pointer-events: all; }
+    #splash.hidden { opacity: 0; pointer-events: none; }
+
+    .splash-logo {
+      font-size: clamp(28px, 6vw, 56px);
+      letter-spacing: 0.1em;
+      animation: none;
+    }
+
+    .splash-sub {
+      font-size: clamp(8px, 1.5vw, 12px);
+      color: var(--dim);
+      margin-top: 20px;
+      letter-spacing: 0.2em;
+    }
+
+    .splash-bar-wrap {
+      margin-top: 40px;
+      width: 200px;
+      height: 12px;
+      border: 2px solid #fff;
+      padding: 2px;
+    }
+
+    .splash-bar-inner {
+      height: 100%;
+      background: #fff;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+
+    /* MAIN MENU */
+    #menu {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: #000;
+      z-index: 98;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.6s;
+      gap: 0;
+    }
+
+    #menu.visible { opacity: 1; pointer-events: all; }
+
+    .menu-title {
+      font-size: clamp(32px, 7vw, 72px);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      text-shadow: 4px 4px 0 #444;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 4px 4px 0 #444; }
+      50% { text-shadow: 4px 4px 0 #666, 0 0 30px rgba(255,255,255,0.1); }
+    }
+
+    .menu-tagline {
+      font-size: clamp(6px, 1.2vw, 10px);
+      color: var(--dim);
+      letter-spacing: 0.15em;
+      margin-bottom: 60px;
+    }
+
+    .menu-box {
+      border: 2px solid #fff;
+      padding: 32px 48px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 320px;
+      position: relative;
+    }
+
+    /* pixel corners */
+    .menu-box::before, .menu-box::after {
+      content: '';
+      position: absolute;
+      width: 8px; height: 8px;
+      background: #000;
+      border: 2px solid #fff;
+    }
+    .menu-box::before { top: -5px; left: -5px; }
+    .menu-box::after { bottom: -5px; right: -5px; }
+
+    .coming-text {
+      font-size: clamp(7px, 1.3vw, 11px);
+      text-align: center;
+      line-height: 2.2;
+      color: #ccc;
+      margin-bottom: 8px;
+    }
+
+    .coming-text span {
+      color: #fff;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .resume-btn {
+      margin-top: 16px;
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(7px, 1.2vw, 10px);
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 14px 24px;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      position: relative;
+      transition: transform 0.1s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .resume-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; right: -4px;
+      width: 100%; height: 100%;
+      background: #555;
+      z-index: -1;
+    }
+
+    .resume-btn:hover {
+      transform: translate(-2px, -2px);
+    }
+    .resume-btn:hover::after {
+      bottom: -6px; right: -6px;
+    }
+    .resume-btn:active {
+      transform: translate(0, 0);
+    }
+    .resume-btn:active::after {
+      bottom: -2px; right: -2px;
+    }
+
+    /* selector arrow */
+    .selector {
+      display: inline-block;
+      margin-right: 8px;
+      animation: blink 0.8s step-end infinite;
+    }
+
+    .menu-footer {
+      position: fixed;
+      bottom: 24px;
+      left: 0; right: 0;
+      text-align: center;
+      font-size: clamp(5px, 0.9vw, 8px);
+      color: #444;
+      letter-spacing: 0.1em;
+    }
+
+    /* pixel art decoration — tiny sprite grid */
+    .pixel-deco {
+      position: fixed;
+      bottom: 60px;
+      right: 40px;
+      display: grid;
+      grid-template-columns: repeat(8, 6px);
+      grid-template-rows: repeat(8, 6px);
+      gap: 1px;
+      opacity: 0.25;
+    }
+
+    .pixel-deco span {
+      width: 6px; height: 6px;
+      background: #fff;
+    }
+
+    .pixel-deco span.off { background: transparent; }
+  </style>
 </head>
 <body>
-    <div class="grain"></div>
-    <div class="cursor-glow" id="glow"></div>
-    <canvas id="bgCanvas"></canvas>
 
-    <nav id="nav">
-        <a href="#" class="nav-name">Adrian Maier</a>
-        <ul class="nav-links">
-            <li><a href="#about">About</a></li>
-            <li><a href="#interests">Interests</a></li>
-            <li><a href="#experience">Experience</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<!-- BOOT -->
+<div id="boot">
+  <div class="boot-line" id="b0">ADISOFT BIOS v1.992</div>
+  <div class="boot-line" id="b1">Copyright (C) 1992 ADISOFT Inc. All Rights Reserved.</div>
+  <div class="boot-line" id="b2">&nbsp;</div>
+  <div class="boot-line" id="b3">CPU: ADRIANCORE 9000 @ 3.14 MHz</div>
+  <div class="boot-line" id="b4">Memory Test: 640K OK (640K ought to be enough for anybody)</div>
+  <div class="boot-line" id="b5">&nbsp;</div>
+  <div class="boot-line" id="b6">Detecting storage devices...</div>
+  <div class="boot-line" id="b7">  Drive C: IDEAS.HDD    [OK]</div>
+  <div class="boot-line" id="b8">  Drive D: PROJECTS.HDD [OK]</div>
+  <div class="boot-line" id="b9">  Drive E: MISTAKES.HDD [OK]  (14.3 GB used)</div>
+  <div class="boot-line" id="b10">&nbsp;</div>
+  <div class="boot-line" id="b11">Loading ADISOFT OS...</div>
+  <div class="boot-line" id="b12">&nbsp;</div>
+  <div class="boot-line" id="b13">WARNING: SOMETHING COOL IS BEING COMPILED</div>
+  <div class="boot-line" id="b14">WARNING: DO NOT TURN OFF YOUR IMAGINATION</div>
+  <div class="boot-line" id="b15">&nbsp;</div>
+  <div class="boot-line" id="b16">Press any key to continue...</div>
+</div>
 
-    <button class="music-btn" id="musicBtn" title="Toggle ambient sound">
-        <div class="music-bars">
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-            <div class="music-bar"></div>
-        </div>
-    </button>
+<!-- STUDIO SPLASH -->
+<div id="splash">
+  <div class="splash-logo">ADISOFT</div>
+  <div class="splash-sub">ENTERTAINMENT DIVISION</div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar-inner" id="splashBar"></div>
+  </div>
+</div>
 
-    <section class="hero">
-        <div class="hero-content">
-            <p class="hero-tag">IB Student · Class of 2027</p>
-            <h1 class="hero-name">Adrian Maier</h1>
-            <p class="hero-desc">
-                Interested in mathematics, computer science, and the occasional film. 
-                Currently figuring things out in Toronto.
-            </p>
-            <div class="hero-meta">
-                <span><span class="dot"></span> Open to opportunities</span>
-                <span>Toronto, ON</span>
-            </div>
-        </div>
-        <div class="scroll-cue">
-            <div class="scroll-line"></div>
-            <span>Scroll</span>
-        </div>
-    </section>
+<!-- MAIN MENU -->
+<div id="menu">
+  <div class="menu-title">ADISOFT</div>
+  <div class="menu-tagline">// ENTERTAINMENT DIVISION //</div>
 
-    <section id="about">
-        <div class="section-label">About</div>
-        <div class="about-grid">
-            <div class="about-text">
-                <p>
-                    I'm an IB student with a focus on <strong>mathematics and computer science</strong>. 
-                    Originally from Cluj-Napoca, Romania, now based in Toronto.
-                </p>
-                <p>
-                    Outside of academics, I play <strong>trombone</strong>, spend too much money on headphones, 
-                    and read when I get the chance. Dostoevsky is a favorite but I'm usually bouncing between 
-                    philosophy, fiction, and whatever else catches my attention. I also make short films 
-                    with friends when time allows.
-                </p>
-                <p>
-                    I've been doing <strong>competitive programming</strong> for a while now and genuinely 
-                    enjoy the problem solving side of it. I take on leadership roles when I feel like I can 
-                    actually contribute something. DECA, robotics, music council, among others. Building things 
-                    with people is just more interesting than going at it alone.
-                </p>
-            </div>
-            <div class="about-details">
-                <div class="detail-block">
-                    <div class="detail-label">Education</div>
-                    <div class="detail-value">International Baccalaureate</div>
-                    <div class="detail-sub">Graduating Summer 2027</div>
-                </div>
-                <div class="detail-block">
-                    <div class="detail-label">Focus</div>
-                    <div class="detail-value">Mathematics & Computer Science</div>
-                    <div class="detail-sub">CCC Senior 50+</div>
-                </div>
-                <div class="detail-block">
-                    <div class="detail-label">Programs</div>
-                    <div class="detail-value">U of T DEEP · HarvardX</div>
-                    <div class="detail-sub">Engineering · Leadership</div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <div class="menu-box">
+    <div class="coming-text">
+      something is being built.<br/>
+      something <span>pixel-perfect.</span><br/>
+      check back soon.
+    </div>
 
-    <section id="interests">
-        <div class="section-label">Interests</div>
-        <div class="bento">
-            <div class="bento-card lg">
-                <div>
-                    <div class="bento-icon">λ</div>
-                    <h3 class="bento-title">Programming</h3>
-                    <p class="bento-desc">
-                        Competitive programming is where most of my technical energy goes. 
-                        There's something satisfying about taking a messy problem and finding 
-                        an elegant solution. Scored 50+ on CCC Senior. Lately I've been getting 
-                        into more CS theory and playing around with machine learning.
-                    </p>
-                </div>
-                <div class="bento-tag">C++ · Python · Algorithms</div>
-            </div>
-            <div class="bento-card md">
-                <div>
-                    <div class="bento-icon">♪</div>
-                    <h3 class="bento-title">Music</h3>
-                    <p class="bento-desc">
-                        Trombone player. There's something grounding about brass instruments. 
-                        You can't really fake your way through it. Part of the music council at school.
-                    </p>
-                </div>
-                <div class="bento-tag">Trombone · Music Council</div>
-            </div>
-            <div class="bento-card md">
-                <div>
-                    <div class="bento-icon">∑</div>
-                    <h3 class="bento-title">Mathematics</h3>
-                    <p class="bento-desc">
-                        I like the rigor of it. It's the foundation for pretty much everything 
-                        I do in CS. Planning to study it more seriously.
-                    </p>
-                </div>
-                <div class="bento-tag">Pure & Applied Math</div>
-            </div>
-            <div class="bento-card sm">
-                <div>
-                    <div class="bento-icon">▤</div>
-                    <h3 class="bento-title">Film</h3>
-                    <p class="bento-desc">
-                        I watch a lot of films and sometimes make short ones with friends. 
-                        Nothing too serious. Just a fun way to tell stories.
-                    </p>
-                </div>
-                <div class="bento-tag">Filmmaking</div>
-            </div>
-            <div class="bento-card sm">
-                <div>
-                    <div class="bento-icon">☰</div>
-                    <h3 class="bento-title">Reading</h3>
-                    <p class="bento-desc">
-                        The Brothers Karamazov is probably my favorite book. But I read all over the place. 
-                        Philosophy, fiction, some history. Whatever I'm in the mood for.
-                    </p>
-                </div>
-                <div class="bento-tag">Literature</div>
-            </div>
-            <div class="bento-card sm">
-                <div>
-                    <div class="bento-icon">⬡</div>
-                    <h3 class="bento-title">Entrepreneurship</h3>
-                    <p class="bento-desc">
-                        I've tried building a few things over the years. Most didn't work out but 
-                        I learned more from those than anything else. Active in DECA.
-                    </p>
-                </div>
-                <div class="bento-tag">DECA</div>
-            </div>
-            <div class="bento-card sm">
-                <div>
-                    <div class="bento-icon">◎</div>
-                    <h3 class="bento-title">Audio</h3>
-                    <p class="bento-desc">
-                        Bit of an audiophile. Probably spend more time researching gear than I should. 
-                        Good sound just makes everything better.
-                    </p>
-                </div>
-                <div class="bento-tag">Audiophile</div>
-            </div>
-        </div>
-    </section>
+    <a
+      class="resume-btn"
+      href="https://raw.githubusercontent.com/AdiDev29/PersonalWebsite/main/adrian_maier_resume.pdf"
+      download="Adrian_Maier_Resume.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      <span class="selector">▶</span> RESUME.PDF
+    </a>
+  </div>
 
-    <section class="quote-section">
-        <div class="quote-inner">
-            <p class="quote-text">
-                "Above all, don't lie to yourself. The man who lies to himself and listens to his own lie 
-                comes to a point that he cannot distinguish the truth within him, or around him, 
-                and so loses all respect for himself and for others."
-            </p>
-            <p class="quote-attr">— Fyodor Dostoevsky, The Brothers Karamazov</p>
-        </div>
-    </section>
+  <div class="menu-footer">
+    © 1992 ADISOFT INC. &nbsp;|&nbsp; ALL RIGHTS RESERVED &nbsp;|&nbsp; NO RIGHTS WERE HARMED
+  </div>
+</div>
 
-    <section id="experience">
-        <div class="section-label">Experience</div>
-        <div class="timeline">
-            <div class="tl-item">
-                <div class="tl-year">2024</div>
-                <div class="tl-content">
-                    <h3 class="tl-title">U of T DEEP Program</h3>
-                    <p class="tl-desc">
-                        Got into the Da Vinci Engineering Enrichment Program at U of T. 
-                        Focused on advanced engineering and research.
-                    </p>
-                </div>
-            </div>
-            <div class="tl-item">
-                <div class="tl-year">2024</div>
-                <div class="tl-content">
-                    <h3 class="tl-title">HarvardX Leadership</h3>
-                    <p class="tl-desc">
-                        Completed leadership principles course. Picked up some useful frameworks 
-                        for thinking about teams and how organizations work.
-                    </p>
-                </div>
-            </div>
-            <div class="tl-item">
-                <div class="tl-year">Ongoing</div>
-                <div class="tl-content">
-                    <h3 class="tl-title">Competitive Programming</h3>
-                    <p class="tl-desc">
-                        CCC Senior scores over 50. Regular practice and contests. 
-                        It's become one of the things I spend the most time on.
-                    </p>
-                </div>
-            </div>
-            <div class="tl-item">
-                <div class="tl-year">Ongoing</div>
-                <div class="tl-content">
-                    <h3 class="tl-title">Leadership Roles</h3>
-                    <p class="tl-desc">
-                        DECA, Robotics Club, Music Council, and a few other things at school. 
-                        I like being part of building something with other people.
-                    </p>
-                </div>
-            </div>
-            <div class="tl-item">
-                <div class="tl-year">Past</div>
-                <div class="tl-content">
-                    <h3 class="tl-title">Entrepreneurship</h3>
-                    <p class="tl-desc">
-                        Tried a few ventures. Some worked, most didn't. But I learned a lot either way.
-                    </p>
-                </div>
-            </div>
-        </div>
-    </section>
+<!-- pixel decoration (little sprite) -->
+<div class="pixel-deco" id="deco"></div>
 
-    <section id="contact">
-        <div class="section-label">Contact</div>
-        <div class="contact-inner">
-            <h2 class="contact-title">Let's talk.</h2>
-            <p class="contact-text">
-                Whether it's about programming, a potential project, or just talking about books and films. Feel free to reach out.
-            </p>
-            <div class="btns">
-                <a href="resume.pdf" download class="btn btn-primary">Download Resume</a>
-                <a href="mailto:contact@adrianmaier.com" class="btn btn-secondary">Email Me</a>
-            </div>
-        </div>
-    </section>
+<script>
+  // little pixel character decoration
+  const pattern = [
+    [0,0,1,1,1,1,0,0],
+    [0,1,1,1,1,1,1,0],
+    [0,1,0,1,1,0,1,0],
+    [0,1,1,1,1,1,1,0],
+    [0,0,1,0,0,1,0,0],
+    [0,1,1,0,0,1,1,0],
+    [1,1,0,0,0,0,1,1],
+    [1,0,0,0,0,0,0,1],
+  ];
+  const deco = document.getElementById('deco');
+  pattern.forEach(row => row.forEach(cell => {
+    const s = document.createElement('span');
+    if (!cell) s.classList.add('off');
+    deco.appendChild(s);
+  }));
 
-    <footer>
-        <p class="footer-text">© 2025 Adrian Maier</p>
-        <div class="footer-links">
-            <a href="https://github.com/AdiDev29" target="_blank">GitHub</a>
-            <a href="https://www.linkedin.com/in/adrian-maier29/" target="_blank">LinkedIn</a>
-        </div>
-    </footer>
+  // BOOT SEQUENCE
+  const boot = document.getElementById('boot');
+  const lines = document.querySelectorAll('.boot-line');
+  const delays = [0, 80, 160, 240, 360, 480, 600, 720, 800, 900, 1000, 1100, 1300, 1500, 1650, 1800, 2200];
 
-    <script>
-        // Cursor glow
-        const glow = document.getElementById('glow');
-        let gX = window.innerWidth / 2, gY = window.innerHeight / 2;
-        let mX = gX, mY = gY;
+  lines.forEach((line, i) => {
+    setTimeout(() => line.classList.add('show'), delays[i] || i * 80);
+  });
 
-        document.addEventListener('mousemove', e => { mX = e.clientX; mY = e.clientY; });
+  // wait for all lines to finish, then only advance on keypress or click
+  let bootDone = false;
+  let bootReady = false;
 
-        (function animate() {
-            gX += (mX - gX) * 0.06;
-            gY += (mY - gY) * 0.06;
-            glow.style.left = gX + 'px';
-            glow.style.top = gY + 'px';
-            requestAnimationFrame(animate);
-        })();
+  setTimeout(() => { bootReady = true; }, 2400);
 
-        // Nav scroll
-        const nav = document.getElementById('nav');
-        window.addEventListener('scroll', () => {
-            nav.classList.toggle('scrolled', window.scrollY > 50);
-        });
+  function advanceToBoot() {
+    if (bootDone || !bootReady) return;
+    bootDone = true;
+    boot.style.opacity = '0';
+    setTimeout(() => {
+      boot.style.display = 'none';
+      showSplash();
+    }, 400);
+  }
 
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
+  document.addEventListener('keydown', () => advanceToBoot());
+  document.addEventListener('click', () => advanceToBoot());
 
-        // Intersection observer
-        const obs = new IntersectionObserver(entries => {
-            entries.forEach((entry, i) => {
-                if (entry.isIntersecting) {
-                    setTimeout(() => entry.target.classList.add('visible'), i * 60);
-                }
-            });
-        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  // SPLASH
+  function showSplash() {
+    const splash = document.getElementById('splash');
+    const bar = document.getElementById('splashBar');
+    splash.classList.add('visible');
 
-        document.querySelectorAll('.bento-card, .tl-item').forEach(el => obs.observe(el));
+    let pct = 0;
+    const iv = setInterval(() => {
+      pct += Math.random() * 8 + 2;
+      if (pct >= 100) { pct = 100; clearInterval(iv); }
+      bar.style.width = pct + '%';
+      if (pct >= 100) {
+        setTimeout(() => {
+          splash.classList.remove('visible');
+          splash.classList.add('hidden');
+          setTimeout(showMenu, 500);
+        }, 400);
+      }
+    }, 60);
+  }
 
-        // Background grid
-        const canvas = document.getElementById('bgCanvas');
-        const ctx = canvas.getContext('2d');
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            draw();
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.strokeStyle = 'rgba(255,255,255,0.015)';
-            ctx.lineWidth = 1;
-            const g = 70;
-            for (let x = 0; x <= canvas.width; x += g) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
-            }
-            for (let y = 0; y <= canvas.height; y += g) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
-            }
-        }
-
-        resize();
-        window.addEventListener('resize', resize);
-
-        // Audio
-        let audioCtx, masterGain, playing = false;
-
-        function initAudio() {
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            masterGain = audioCtx.createGain();
-            masterGain.connect(audioCtx.destination);
-            masterGain.gain.value = 0;
-
-            [55, 82.5, 110, 165].forEach((f, i) => {
-                const o = audioCtx.createOscillator();
-                o.type = 'sine';
-                o.frequency.value = f;
-                const g = audioCtx.createGain();
-                g.gain.value = 0.07 / (i + 1);
-                const flt = audioCtx.createBiquadFilter();
-                flt.type = 'lowpass';
-                flt.frequency.value = 180;
-                o.connect(flt);
-                flt.connect(g);
-                g.connect(masterGain);
-                o.start();
-            });
-
-            const buf = audioCtx.createBuffer(1, audioCtx.sampleRate * 2, audioCtx.sampleRate);
-            const d = buf.getChannelData(0);
-            for (let i = 0; i < buf.length; i++) d[i] = (Math.random() * 2 - 1) * 0.008;
-            const n = audioCtx.createBufferSource();
-            n.buffer = buf;
-            n.loop = true;
-            const nf = audioCtx.createBiquadFilter();
-            nf.type = 'lowpass';
-            nf.frequency.value = 80;
-            n.connect(nf);
-            nf.connect(masterGain);
-            n.start();
-        }
-
-        document.getElementById('musicBtn').addEventListener('click', function() {
-            if (!audioCtx) initAudio();
-            if (!playing) {
-                audioCtx.resume();
-                masterGain.gain.linearRampToValueAtTime(0.25, audioCtx.currentTime + 1.2);
-                this.classList.add('active');
-                playing = true;
-            } else {
-                masterGain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.6);
-                this.classList.remove('active');
-                playing = false;
-            }
-        });
-    </script>
+  // MENU
+  function showMenu() {
+    const menu = document.getElementById('menu');
+    menu.classList.add('visible');
+  }
+</script>
 </body>
 </html>
